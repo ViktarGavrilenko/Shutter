@@ -19,6 +19,7 @@ public class ScanShutterTest {
     private static final String DEFAULT_URL = CONFIG_FILE.getValue("/mainPage").toString();
     private static final int START_PAGE = (int) TEST_FILE.getValue("/startPage");
     private static final int END_PAGE = (int) TEST_FILE.getValue("/endPage");
+    private static final int MAX_COUNT_IMAGES = (int) TEST_FILE.getValue("/maxCountImages");
     private int id = 0;
 
     @BeforeMethod
@@ -33,7 +34,7 @@ public class ScanShutterTest {
         SearchPage searchPage = new SearchPage();
         Map<String, String> data = searchPage.getMapImages();
         for (Map.Entry<String, String> entry : data.entrySet()) {
-            if (id >= 10000) {
+            if (id >= MAX_COUNT_IMAGES) {
                 return;
             }
             id++;
