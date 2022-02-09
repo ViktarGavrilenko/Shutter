@@ -1,4 +1,5 @@
 {
   "startPage": 1,
-  "endPage": 5
+  "endPage": 5,
+  "maxCountImages": 10000
 }
