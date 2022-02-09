@@ -10,7 +10,6 @@ import pageobject.SearchPage;
 import java.util.Map;
 
 import static aquality.selenium.browser.AqualityServices.getBrowser;
-import static databasequeries.SearchPageQueries.addTestInfoInBase;
 import static utils.MySqlUtils.closeConnection;
 
 public class ScanShutterTest {
@@ -26,20 +25,18 @@ public class ScanShutterTest {
         getBrowser().maximize();
     }
 
-    @Test(description = "Working with test data")
-    public void testWorkWithTestData() {
-        for (int i = START_PAGE; i <= END_PAGE; i++) {
-            getBrowser().goTo(DEFAULT_URL + i);
-            Logger.getInstance().info("Check if the page is loaded " + DEFAULT_URL);
-            SearchPage searchPage = new SearchPage();
-            Map<String, String> data = searchPage.getMapImages();
-            for (Map.Entry<String, String> entry : data.entrySet()) {
-                if (id >= 10000) {
-                    return;
-                }
-                addTestInfoInBase(entry.getKey(), String.valueOf(++id), entry.getValue());
-//                System.out.println(entry.getKey() + " " + (++id) + " " + entry.getValue());
+    @Test(description = "Working with test data",
+            dataProvider = "ScannedPageNumbers", dataProviderClass = DataProviderForTests.class)
+    public void testWorkWithTestData(int page) {
+        getBrowser().goTo(DEFAULT_URL + page);
+        SearchPage searchPage = new SearchPage();
+        Map<String, String> data = searchPage.getMapImages();
+        for (Map.Entry<String, String> entry : data.entrySet()) {
+            if (id >= 10000) {
+                return;
             }
+            //addTestInfoInBase(entry.getKey(), String.valueOf(++id), entry.getValue());
+            Logger.getInstance().info(entry.getKey() + " " + (++id) + " " + entry.getValue());
         }
     }
 
