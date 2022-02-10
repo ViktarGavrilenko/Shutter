@@ -1,9 +1,8 @@
 import aquality.selenium.core.logging.Logger;
 import aquality.selenium.core.utilities.ISettingsFile;
 import aquality.selenium.core.utilities.JsonSettingsFile;
-import org.testng.ITestResult;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import pageobject.SearchPage;
 
@@ -11,6 +10,7 @@ import java.util.Map;
 
 import static aquality.selenium.browser.AqualityServices.getBrowser;
 import static databasequeries.SearchPageQueries.addTestInfoInBase;
+import static utils.ArithmeticUtils.isMaxValue;
 import static utils.MySqlUtils.closeConnection;
 
 public class ScanShutterTest {
@@ -20,7 +20,7 @@ public class ScanShutterTest {
     private static final int MAX_COUNT_IMAGES = (int) TEST_FILE.getValue("/maxCountImages");
     private int id = 0;
 
-    @BeforeMethod
+    @BeforeClass
     protected void beforeMethod() {
         getBrowser().maximize();
     }
@@ -28,21 +28,20 @@ public class ScanShutterTest {
     @Test(description = "Working with test data",
             dataProvider = "ScannedPageNumbers", dataProviderClass = DataProviderForTests.class)
     public void testWorkWithTestData(int page) {
+        isMaxValue(id, MAX_COUNT_IMAGES);
         getBrowser().goTo(DEFAULT_URL + page);
         SearchPage searchPage = new SearchPage();
         Map<String, String> data = searchPage.getMapImages();
         for (Map.Entry<String, String> entry : data.entrySet()) {
-            if (id >= MAX_COUNT_IMAGES) {
-                return;
-            }
+            isMaxValue(id, MAX_COUNT_IMAGES);
             id++;
             addTestInfoInBase(entry.getKey(), String.valueOf(id), entry.getValue());
             Logger.getInstance().info(entry.getKey() + " " + (id) + " " + entry.getValue());
         }
     }
 
-    @AfterMethod
-    public void afterTest(ITestResult result) {
+    @AfterClass
+    public void afterTest() {
         closeConnection();
         getBrowser().quit();
     }
