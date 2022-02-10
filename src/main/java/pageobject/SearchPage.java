@@ -15,6 +15,8 @@ import static aquality.selenium.elements.ElementType.LINK;
 import static utils.StringUtils.getIdImageFromUrl;
 
 public class SearchPage extends Form {
+    private final static String IMAGE_NOT_FOUND = "Images on page not found";
+
     private final List<ILink> images = getElementFactory().findElements(
             By.cssSelector("div[data-automation^='AssetGrids'] a[class^='jss']"), "Links Image", LINK);
 
@@ -27,8 +29,8 @@ public class SearchPage extends Form {
         try {
             AqualityServices.getConditionalWait().waitForTrue(() -> (images.size() > 0));
         } catch (TimeoutException e) {
-            Logger.getInstance().error("Images on page not found");
-            throw new IllegalArgumentException("Images on page not found", e);
+            Logger.getInstance().error(IMAGE_NOT_FOUND);
+            throw new IllegalArgumentException(IMAGE_NOT_FOUND, e);
         }
         for (ILink image : images) {
             String link = image.getHref();

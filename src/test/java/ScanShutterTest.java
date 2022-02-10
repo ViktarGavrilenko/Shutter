@@ -17,8 +17,6 @@ public class ScanShutterTest {
     private static final ISettingsFile CONFIG_FILE = new JsonSettingsFile("configData.json");
     private static final ISettingsFile TEST_FILE = new JsonSettingsFile("testData.json");
     private static final String DEFAULT_URL = CONFIG_FILE.getValue("/mainPage").toString();
-    private static final int START_PAGE = (int) TEST_FILE.getValue("/startPage");
-    private static final int END_PAGE = (int) TEST_FILE.getValue("/endPage");
     private static final int MAX_COUNT_IMAGES = (int) TEST_FILE.getValue("/maxCountImages");
     private int id = 0;
 
