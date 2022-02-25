@@ -31,12 +31,16 @@ public class ScanShutterTest {
         isMaxValue(id, MAX_COUNT_IMAGES);
         getBrowser().goTo(DEFAULT_URL + page);
         SearchPage searchPage = new SearchPage();
-        Map<String, String> data = searchPage.getMapImages();
-        for (Map.Entry<String, String> entry : data.entrySet()) {
-            isMaxValue(id, MAX_COUNT_IMAGES);
-            id++;
-            addTestInfoInBase(entry.getKey(), String.valueOf(id), entry.getValue());
-            Logger.getInstance().info(entry.getKey() + " " + (id) + " " + entry.getValue());
+        if (searchPage.state().waitForDisplayed()) {
+            Map<String, String> data = searchPage.getMapImages();
+            for (Map.Entry<String, String> entry : data.entrySet()) {
+                isMaxValue(id, MAX_COUNT_IMAGES);
+                id++;
+                addTestInfoInBase(entry.getKey(), String.valueOf(id), entry.getValue());
+                Logger.getInstance().info(entry.getKey() + " " + (id) + " " + entry.getValue());
+            }
+        } else {
+            Logger.getInstance().warn("Page number " + (page) + " is not displayed");
         }
     }
 
