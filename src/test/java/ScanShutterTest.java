@@ -16,8 +16,9 @@ import static utils.MySqlUtils.closeConnection;
 public class ScanShutterTest {
     private static final ISettingsFile CONFIG_FILE = new JsonSettingsFile("configData.json");
     private static final ISettingsFile TEST_FILE = new JsonSettingsFile("testData.json");
-    private static final String DEFAULT_URL = CONFIG_FILE.getValue("/mainPage").toString();
     private static final int MAX_COUNT_IMAGES = (int) TEST_FILE.getValue("/maxCountImages");
+    private static final String TYPE_SCAN = TEST_FILE.getValue("/typeScan").toString();
+    private static final String DEFAULT_URL = String.format(CONFIG_FILE.getValue("/mainPage").toString(), TYPE_SCAN);
     private int id = 0;
 
     @BeforeClass
