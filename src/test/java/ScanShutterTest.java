@@ -30,23 +30,30 @@ public class ScanShutterTest {
             dataProvider = "ScannedPageNumbers", dataProviderClass = DataProviderForTests.class)
     public void testWorkWithTestData(int page) {
         isMaxValue(id, MAX_COUNT_IMAGES);
-        getBrowser().goTo(DEFAULT_URL + page);
-        SearchPage searchPage = new SearchPage();
-        Logger.getInstance().info("Answer isDisplayed():  " + searchPage.state().isDisplayed());
-        Logger.getInstance().info("Answer isEnabled():  " + searchPage.state().isEnabled());
-        Logger.getInstance().info("Answer isClickable():  " + searchPage.state().isClickable());
-        Logger.getInstance().info("Answer waitForDisplayed():  " + searchPage.state().waitForDisplayed());
-        Logger.getInstance().info("Answer waitForEnabled():  " + searchPage.state().waitForEnabled());
-        if (searchPage.state().waitForDisplayed()) {
+        SearchPage searchPage;
+        for (int i = 0; i < 3; i++) {
+            getBrowser().goTo(DEFAULT_URL + page);
+            searchPage = new SearchPage();
+            searchPage.state().waitForDisplayed();
             Map<String, String> data = searchPage.getMapImages();
-            for (Map.Entry<String, String> entry : data.entrySet()) {
-                isMaxValue(id, MAX_COUNT_IMAGES);
-                id++;
-                addTestInfoInBase(entry.getKey(), String.valueOf(id), entry.getValue());
-                Logger.getInstance().info(entry.getKey() + " " + (id) + " " + entry.getValue());
+            Logger.getInstance().info("Data size is " + data.size());
+            if (data.size() > 0) {
+                for (Map.Entry<String, String> entry : data.entrySet()) {
+                    isMaxValue(id, MAX_COUNT_IMAGES);
+                    id++;
+                    addTestInfoInBase(entry.getKey(), String.valueOf(id), entry.getValue());
+                    Logger.getInstance().info(entry.getKey() + " " + (id) + " " + entry.getValue());
+                }
+                Logger.getInstance().info("Request number is " + i);
+                break;
+            } else {
+                try {
+                    Logger.getInstance().info("Thread sleep 60 sec");
+                    Thread.sleep(60000);
+                } catch (InterruptedException e) {
+                    Logger.getInstance().info("Error  InterruptedException " + e);
+                }
             }
-        } else {
-            Logger.getInstance().warn("Page number " + (page) + " is not displayed");
         }
     }
 

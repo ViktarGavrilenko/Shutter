@@ -30,7 +30,7 @@ public class SearchPage extends Form {
             AqualityServices.getConditionalWait().waitForTrue(() -> (images.size() > 0));
         } catch (TimeoutException e) {
             Logger.getInstance().error(IMAGE_NOT_FOUND);
-            throw new IllegalArgumentException(IMAGE_NOT_FOUND, e);
+            return listImages;
         }
         for (ILink image : images) {
             String link = image.getHref();
