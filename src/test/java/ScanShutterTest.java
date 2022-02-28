@@ -32,7 +32,10 @@ public class ScanShutterTest {
         isMaxValue(id, MAX_COUNT_IMAGES);
         getBrowser().goTo(DEFAULT_URL + page);
         SearchPage searchPage = new SearchPage();
+        Logger.getInstance().info("Answer waitForDisplayed():  " + searchPage.state().waitForDisplayed());
+        Logger.getInstance().info("Test step");
         if (searchPage.state().waitForDisplayed()) {
+            Logger.getInstance().info("Test step 2");
             Map<String, String> data = searchPage.getMapImages();
             for (Map.Entry<String, String> entry : data.entrySet()) {
                 isMaxValue(id, MAX_COUNT_IMAGES);
