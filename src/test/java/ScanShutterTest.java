@@ -6,6 +6,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import pageobject.SearchPage;
 
+import java.io.File;
 import java.util.Map;
 
 import static aquality.selenium.browser.AqualityServices.getBrowser;
@@ -25,6 +26,7 @@ public class ScanShutterTest {
     @BeforeClass
     protected void beforeMethod() {
         getBrowser().maximize();
+        new File(PATH_SCREEN.substring(0, PATH_SCREEN.lastIndexOf("\\"))).mkdir();
     }
 
     @Test(description = "Working with test data",
