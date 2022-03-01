@@ -17,6 +17,7 @@ public class ScanShutterTest {
     private static final int MAX_COUNT_IMAGES = (int) TEST_FILE.getValue("/maxCountImages");
     private static final String TYPE_SCAN = TEST_FILE.getValue("/typeScan").toString();
     private static final String DEFAULT_URL = String.format(CONFIG_FILE.getValue("/mainPage").toString(), TYPE_SCAN);
+    private static final String PATH_SCREEN = System.getProperty("user.dir") + TEST_FILE.getValue("/screen").toString();
     private int id = 0;
 
     @BeforeMethod
@@ -33,7 +34,7 @@ public class ScanShutterTest {
             getBrowser().goTo(DEFAULT_URL + page);
             searchPage = new SearchPage();
             searchPage.state().waitForDisplayed();
-            Map<String, String> data = searchPage.getMapImages();
+            Map<String, String> data = searchPage.getMapImages(String.format(PATH_SCREEN, page));
             Logger.getInstance().info("Data size is " + data.size());
             if (data.size() > 0) {
                 for (Map.Entry<String, String> entry : data.entrySet()) {
@@ -46,10 +47,10 @@ public class ScanShutterTest {
                 break;
             } else {
                 try {
-                    Logger.getInstance().info("Thread sleep 60 sec");
+                    Logger.getInstance().info("Thread sleep ");
                     Thread.sleep(60000);
                 } catch (InterruptedException e) {
-                    Logger.getInstance().info("Error  InterruptedException " + e);
+                    Logger.getInstance().info("Error InterruptedException " + e);
                 }
             }
         }
