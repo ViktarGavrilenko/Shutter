@@ -2,5 +2,6 @@
   "startPage": 1,
   "endPage": 100,
   "maxCountImages": 10000,
-  "typeScan": "vector"
+  "typeScan": "vector",
+  "screen": "\\target\\screens\\screen%s.png"
 }
