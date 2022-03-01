@@ -1,9 +1,7 @@
 import aquality.selenium.core.logging.Logger;
 import aquality.selenium.core.utilities.ISettingsFile;
 import aquality.selenium.core.utilities.JsonSettingsFile;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import pageobject.SearchPage;
 
 import java.util.Map;
@@ -21,7 +19,7 @@ public class ScanShutterTest {
     private static final String DEFAULT_URL = String.format(CONFIG_FILE.getValue("/mainPage").toString(), TYPE_SCAN);
     private int id = 0;
 
-    @BeforeClass
+    @BeforeMethod
     protected void beforeMethod() {
         getBrowser().maximize();
     }
@@ -57,9 +55,13 @@ public class ScanShutterTest {
         }
     }
 
-    @AfterClass
-    public void afterTest() {
-        closeConnection();
+    @AfterMethod
+    public void afterMethod(){
         getBrowser().quit();
+    }
+
+    @AfterClass
+    public void afterClass() {
+        closeConnection();
     }
 }
