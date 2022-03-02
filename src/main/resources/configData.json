@@ -1,3 +1,3 @@
 {
-  "mainPage": "https://www.shutterstock.com/ru/search?editorial=0&image_type=vector&page="
+  "mainPage": "https://www.shutterstock.com/ru/search?editorial=0&image_type=%s&page="
 }
