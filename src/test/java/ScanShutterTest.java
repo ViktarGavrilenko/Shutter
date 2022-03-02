@@ -1,9 +1,7 @@
 import aquality.selenium.core.logging.Logger;
 import aquality.selenium.core.utilities.ISettingsFile;
 import aquality.selenium.core.utilities.JsonSettingsFile;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 import pageobject.SearchPage;
 
 import java.io.File;
@@ -23,7 +21,7 @@ public class ScanShutterTest {
     private static final String PATH_SCREEN = System.getProperty("user.dir") + TEST_FILE.getValue("/screen").toString();
     private int id = 0;
 
-    @BeforeClass
+    @BeforeMethod
     protected void beforeMethod() {
         getBrowser().maximize();
         new File(PATH_SCREEN.substring(0, PATH_SCREEN.lastIndexOf("\\"))).mkdir();
@@ -60,9 +58,13 @@ public class ScanShutterTest {
         }
     }
 
-    @AfterClass
-    public void afterTest() {
-        closeConnection();
+    @AfterMethod
+    public void afterMethod(){
         getBrowser().quit();
+    }
+
+    @AfterClass
+    public void afterClass() {
+        closeConnection();
     }
 }
