@@ -29,7 +29,7 @@ public class SearchPage extends Form {
             By.cssSelector("div[data-automation^='AssetGrids'] a[class^='jss']"), "Links Image", LINK);
 
     public SearchPage() {
-        super(By.cssSelector("div[class^='jss'] h2"), "Page Search");
+        super(By.cssSelector("div[data-automation^='AssetGrids'] a[class^='jss']"), "Page Search");
     }
 
     public Map<String, String> getMapImages(String pathScreen) {
