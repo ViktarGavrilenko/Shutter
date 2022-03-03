@@ -11,6 +11,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +38,6 @@ public class SearchPage extends Form {
     public Map<String, String> getMapImages(String pathScreen) {
         Map<String, String> listImages = new LinkedHashMap<>();
         try {
-            AqualityServices.getConditionalWait().waitForTrue(() -> (images.size() > 0));
-        } catch (TimeoutException e) {
             byte[] bytearray = getBrowser().getScreenshot();
             BufferedImage screen;
             try {
@@ -45,6 +46,8 @@ public class SearchPage extends Form {
             } catch (IOException ioException) {
                 Logger.getInstance().error(READ_WRITE_EXCEPT + ioException);
             }
+            AqualityServices.getConditionalWait().waitForTrue(() -> (images.size() > 0));
+        } catch (TimeoutException e) {
             Logger.getInstance().error(IMAGE_NOT_FOUND);
             return listImages;
         }
@@ -52,6 +55,11 @@ public class SearchPage extends Form {
             String link = image.getHref();
             String idImage = getIdImageFromUrl(link);
             listImages.put(idImage, link);
+        }
+        try {
+            Files.delete(Paths.get(pathScreen));
+        } catch (IOException e) {
+            Logger.getInstance().error("File is not existent" + e);;
         }
         return listImages;
     }
