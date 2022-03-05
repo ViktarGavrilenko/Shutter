@@ -4,6 +4,6 @@
   "maxCountImages": 10000,
   "typeScan": "vector",
   "screen": "\\target\\screens\\screen%s.png",
-  "timeSleep": 60000,
+  "timeSleep": 10000,
   "numberReSurveys": 3
 }

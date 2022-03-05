@@ -40,7 +40,6 @@ public class ScanShutterTest {
         for (int i = 0; i < NUMBER_RE_SURVEYS; i++) {
             getBrowser().goTo(DEFAULT_URL + page);
             searchPage = new SearchPage();
-            searchPage.state().waitForDisplayed();
             Map<String, String> data = searchPage.getMapImages(String.format(PATH_SCREEN, page));
             Logger.getInstance().info("Data size is " + data.size());
             if (data.size() > 0) {
