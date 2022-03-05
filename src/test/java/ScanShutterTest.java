@@ -1,6 +1,7 @@
 import aquality.selenium.core.logging.Logger;
 import aquality.selenium.core.utilities.ISettingsFile;
 import aquality.selenium.core.utilities.JsonSettingsFile;
+import org.openqa.selenium.TimeoutException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -39,10 +40,10 @@ public class ScanShutterTest {
         SearchPage searchPage;
         for (int i = 0; i < NUMBER_RE_SURVEYS; i++) {
             getBrowser().goTo(DEFAULT_URL + page);
-            searchPage = new SearchPage();
-            Map<String, String> data = searchPage.getMapImages(String.format(PATH_SCREEN, page));
-            Logger.getInstance().info("Data size is " + data.size());
-            if (data.size() > 0) {
+            try {
+                searchPage = new SearchPage();
+                Map<String, String> data = searchPage.getMapImages(String.format(PATH_SCREEN, page));
+                Logger.getInstance().info("Data size is " + data.size());
                 for (Map.Entry<String, String> entry : data.entrySet()) {
                     isMaxValue(id, MAX_COUNT_IMAGES);
                     id++;
@@ -51,12 +52,13 @@ public class ScanShutterTest {
                 }
                 Logger.getInstance().info("Request number is " + i);
                 break;
-            } else {
+            } catch (TimeoutException e) {
+                Logger.getInstance().info("TimeoutException on the page of number " + page);
                 try {
                     Logger.getInstance().info("Thread sleep " + TIME_SLEEP + " ms");
                     Thread.sleep(TIME_SLEEP);
-                } catch (InterruptedException e) {
-                    Logger.getInstance().info("Error InterruptedException " + e);
+                } catch (InterruptedException eSleep) {
+                    Logger.getInstance().info("Error InterruptedException " + eSleep);
                 }
             }
         }
