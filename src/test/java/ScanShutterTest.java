@@ -39,8 +39,8 @@ public class ScanShutterTest {
         isMaxValue(id, MAX_COUNT_IMAGES);
         SearchPage searchPage;
         for (int i = 0; i < NUMBER_RE_SURVEYS; i++) {
-            getBrowser().goTo(DEFAULT_URL + page);
             try {
+                getBrowser().goTo(DEFAULT_URL + page);
                 searchPage = new SearchPage();
                 Map<String, String> data = searchPage.getMapImages(String.format(PATH_SCREEN, page));
                 Logger.getInstance().info("Data size is " + data.size());
