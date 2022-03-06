@@ -13,6 +13,7 @@ import java.util.Map;
 import static aquality.selenium.browser.AqualityServices.getBrowser;
 import static databasequeries.SearchPageQueries.addTestInfoInBase;
 import static utils.ArithmeticUtils.isMaxValue;
+import static utils.BrowserUtils.createScreenshot;
 import static utils.FileUtils.createFolder;
 import static utils.MySqlUtils.closeConnection;
 
@@ -53,6 +54,7 @@ public class ScanShutterTest {
                 Logger.getInstance().info("Request number is " + i);
                 break;
             } catch (TimeoutException e) {
+                createScreenshot(String.format(PATH_SCREEN, page));
                 Logger.getInstance().info("TimeoutException on the page of number " + page);
                 try {
                     Logger.getInstance().info("Thread sleep " + TIME_SLEEP + " ms");
