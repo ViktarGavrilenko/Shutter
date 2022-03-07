@@ -4,6 +4,7 @@ import aquality.selenium.core.logging.Logger;
 import aquality.selenium.elements.interfaces.ILink;
 import aquality.selenium.forms.Form;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -29,9 +30,13 @@ public class SearchPage extends Form {
         Logger.getInstance().info("Number of images " + images.size());
         if (images.size() > 0) {
             for (ILink image : images) {
-                String link = image.getHref();
-                String idImage = getIdImageFromUrl(link);
-                listImages.put(idImage, link);
+                try {
+                    String link = image.getHref();
+                    String idImage = getIdImageFromUrl(link);
+                    listImages.put(idImage, link);
+                } catch (NoSuchElementException e) {
+                    Logger.getInstance().error("NoSuchElementException: " + e);
+                }
             }
         } else {
             createScreenshot(pathScreen);
