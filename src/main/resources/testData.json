@@ -1,9 +1,10 @@
 {
   "startPage": 1,
-  "endPage": 100,
+  "endPage": 1,
   "maxCountImages": 10000,
   "typeScan": "vector",
   "screen": "\\target\\screens\\screen%s.png",
+  "report": "\\target\\report\\info%s.html",
   "timeSleep": 10000,
   "numberReSurveys": 3
 }

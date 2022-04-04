@@ -4,10 +4,7 @@ import aquality.selenium.core.logging.Logger;
 import aquality.selenium.core.utilities.ISettingsFile;
 import aquality.selenium.core.utilities.JsonSettingsFile;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class MySqlUtils {
     protected static final ISettingsFile MYSQL_CONFIG_FILE = new JsonSettingsFile("mysqlConfig.json");
@@ -46,6 +43,18 @@ public class MySqlUtils {
             statement.executeUpdate(sqlQuery);
         } catch (SQLException e) {
             Logger.getInstance().error(SQL_QUERY_FAILED + e);
+        }
+    }
+
+    public static ResultSet sendSelectQuery(String sqlQuery) {
+        Connection connection = getDbConnection();
+        Statement statement;
+        try {
+            statement = connection.createStatement();
+            return statement.executeQuery(sqlQuery);
+        } catch (SQLException e) {
+            Logger.getInstance().error(SQL_QUERY_FAILED + e);
+            throw new IllegalArgumentException(SQL_QUERY_FAILED, e);
         }
     }
 
