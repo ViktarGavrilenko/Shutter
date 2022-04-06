@@ -1,7 +1,7 @@
 {
   "dbHost": "localhost",
   "dbPort": "3306",
-  "dbUser": "root",
-  "dbPass": "956482",
+  "dbUser": "",
+  "dbPass": "",
   "dbName": "shutter"
 }
