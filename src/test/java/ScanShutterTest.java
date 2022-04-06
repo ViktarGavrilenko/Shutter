@@ -2,23 +2,26 @@ import aquality.selenium.core.logging.Logger;
 import aquality.selenium.core.utilities.ISettingsFile;
 import aquality.selenium.core.utilities.JsonSettingsFile;
 import modelsdatabase.ImageTable;
+import org.openqa.selenium.TimeoutException;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import pageobject.SearchPage;
+import reports.Reports;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static aquality.selenium.browser.AqualityServices.getBrowser;
 import static databasequeries.SearchPageQueries.*;
+import static utils.ArithmeticUtils.isMaxValue;
+import static utils.BrowserUtils.createScreenshot;
 import static utils.FileUtils.createFolder;
 import static utils.MySqlUtils.closeConnection;
-import static utils.StringUtils.changeLinkForTopImage;
 
 public class ScanShutterTest {
     private static final ISettingsFile CONFIG_FILE = new JsonSettingsFile("configData.json");
@@ -32,16 +35,16 @@ public class ScanShutterTest {
     private static final int NUMBER_RE_SURVEYS = (int) TEST_FILE.getValue("/numberReSurveys");
     private int id = 0;
 
-    @BeforeMethod
-    protected void beforeMethod() {
-        //getBrowser().maximize();
+    @BeforeClass
+    protected void beforeClass() {
         createFolder(PATH_SCREEN.substring(0, PATH_SCREEN.lastIndexOf("\\")));
         createFolder(PATH_REPORT.substring(0, PATH_REPORT.lastIndexOf("\\")));
     }
 
-/*    @Test(description = "Working with test data",
+    @Test(priority = 1, description = "Working with test data",
             dataProvider = "ScannedPageNumbers", dataProviderClass = DataProviderForTests.class)
     public void testWorkWithTestData(int page) {
+        getBrowser().maximize();
         isMaxValue(id, MAX_COUNT_IMAGES);
         SearchPage searchPage;
         for (int i = 0; i < NUMBER_RE_SURVEYS; i++) {
@@ -69,56 +72,24 @@ public class ScanShutterTest {
                 }
             }
         }
-    }*/
+        getBrowser().quit();
+    }
 
-    @Test(description = "Get top images")
+    @Test(priority = 2, description = "Get top images")
     public void testGetTopImages() {
+        Logger.getInstance().info("Report is being generated, please wait...");
         Path pathReport = Paths.get(String.format(PATH_REPORT, TYPE_SCAN));
         try {
             if (Files.exists(pathReport)) {
                 Files.delete(pathReport);
             }
             Files.createFile(pathReport);
-
-            ArrayList<ImageTable> images = getTopImages(getDateLastScanBase());
-            for (int i = 0; i < images.size(); i++) {
-                Files.write(pathReport, "<table width='100%' cellspacing='0' cellpadding='5'><tr><td width='50%' valign='top'>".getBytes(), StandardOpenOption.APPEND);
-                String imgSrc = "<img src=" + changeLinkForTopImage(images.get(i).link, images.get(i).idPhoto) +
-                        "> <a href=https://www.shutterstock.com/" + images.get(i).link +
-                        " target=\"_blank\"><br>" + (i + 1) + ") " + images.get(i).idPhoto + "</a><br>";
-                Files.write(pathReport, imgSrc.getBytes(), StandardOpenOption.APPEND);
-                Files.write(pathReport, "<br></td><td valign=\"top\">".getBytes(), StandardOpenOption.APPEND);
-                ArrayList<String> positions = getAllPositionsOfImage(images.get(i).idPhoto);
-                int countScan = 1;
-                int numberTopOld = 0;
-                for (int j = 0; j < positions.size(); j++) {
-                    if (countScan > 1) {
-                        int difference = numberTopOld - Integer.parseInt(positions.get(j));
-                        if (difference > 0) {
-                            String strRed = "<font style=\"background-color: #fc9692 \">" + numberTopOld + " </font> <font color=\"red\">  &nbsp &nbsp +" + difference + "</font><br>";
-                            Files.write(pathReport, strRed.getBytes(), StandardOpenOption.APPEND);
-                        } else {
-                            String strGreen = "<font style=\"background-color: #a7f2bb \">" + numberTopOld + " </font> <font color=\"green\">  &nbsp &nbsp +" + difference + "</font><br>";
-                            Files.write(pathReport, strGreen.getBytes(), StandardOpenOption.APPEND);
-                        }
-                    }
-                    numberTopOld = Integer.parseInt(positions.get(j));
-                    String placeInTop = countScan + ") , место в топе";
-                    Files.write(pathReport, placeInTop.getBytes(), StandardOpenOption.APPEND);
-                    countScan++;
-                }
-
-                Files.write(pathReport, "<br></td></table>".getBytes(), StandardOpenOption.APPEND);
-            }
-
         } catch (IOException e) {
             Logger.getInstance().error("Error IOException: " + e);
         }
-    }
-
-    @AfterMethod
-    public void afterMethod() {
-        getBrowser().quit();
+        List<ImageTable> images = getTopImages(getDateLastScanBase());
+        Reports reports = new Reports();
+        reports.writeTopImages(images, pathReport);
     }
 
     @AfterClass

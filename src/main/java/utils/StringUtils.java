@@ -15,7 +15,7 @@ public class StringUtils {
     }
 
     public static String changeLinkForTopImage(String link, String idPhoto) {
-        return  "https://image.shutterstock.com/" +
+        return "https://image.shutterstock.com/" +
                 link.substring(0, link.lastIndexOf("-")).substring(0, link.lastIndexOf("-"))
                 + "-600w-" + idPhoto + ".jpg";
     }
