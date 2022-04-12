@@ -24,8 +24,8 @@ public class SearchPageQueries {
     private static final String SELECT_ALL_POSITIONS_OF_IMAGE =
             "SELECT num_top, DATE_FORMAT(datawriteinbase, '%%Y-%%m-%%d') as datawriteinbase FROM %s " +
                     "where id_photo = %s ORDER BY datawriteinbase DESC";
-    private static final String SELECT_ALL_DATES_OF_SCAN =
-            "SELECT count(*), datawriteinbase FROM %s GROUP BY DATE_FORMAT(datawriteinbase, '%%Y%%m%%d') DESC";
+    private static final String SELECT_ALL_DATES_OF_SCAN = "SELECT count(*), datawriteinbase FROM %s GROUP BY " +
+            "DATE_FORMAT(datawriteinbase, '%%Y%%m%%d') ORDER BY datawriteinbase DESC";
     private static final String SELECT_IMAGES_SCANNED_ON_SPECIFIC_DATE = "SELECT id_photo FROM %s " +
             "where DATE_FORMAT(datawriteinbase, '%%Y%%m%%d')=DATE_FORMAT('%s', '%%Y%%m%%d') ORDER BY id_photo DESC";
     private static final String SELECT_IMAGE_DATA_FOR_SPECIFIC_DATE = "SELECT * FROM %s where id_photo= %s and " +
