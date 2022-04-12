@@ -18,4 +18,15 @@ public class FileUtils {
             }
         }
     }
+
+    public static void createNewFile(Path pathReport) {
+        try {
+            if (Files.exists(pathReport)) {
+                Files.delete(pathReport);
+            }
+            Files.createFile(pathReport);
+        } catch (IOException e) {
+            Logger.getInstance().error("Error IOException: " + e);
+        }
+    }
 }

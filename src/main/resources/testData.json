@@ -5,6 +5,7 @@
   "typeScan": "vector",
   "screen": "\\target\\screens\\screen%s.png",
   "report": "\\target\\report\\info%s.html",
+  "lastThreeScans": "\\target\\report\\lastThreeScans%s.html",
   "timeSleep": 10000,
   "numberReSurveys": 3
 }

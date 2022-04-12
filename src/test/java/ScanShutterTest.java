@@ -9,8 +9,6 @@ import org.testng.annotations.Test;
 import pageobject.SearchPage;
 import reports.Reports;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -21,6 +19,7 @@ import static databasequeries.SearchPageQueries.*;
 import static utils.ArithmeticUtils.isMaxValue;
 import static utils.BrowserUtils.createScreenshot;
 import static utils.FileUtils.createFolder;
+import static utils.FileUtils.createNewFile;
 import static utils.MySqlUtils.closeConnection;
 
 public class ScanShutterTest {
@@ -31,6 +30,7 @@ public class ScanShutterTest {
     private static final String DEFAULT_URL = String.format(CONFIG_FILE.getValue("/mainPage").toString(), TYPE_SCAN);
     private static final String PATH_SCREEN = System.getProperty("user.dir") + TEST_FILE.getValue("/screen").toString();
     private static final String PATH_REPORT = System.getProperty("user.dir") + TEST_FILE.getValue("/report").toString();
+    private static final String LAST_THREE_SCANS_REPORT = System.getProperty("user.dir") + TEST_FILE.getValue("/lastThreeScans").toString();
     private static final int TIME_SLEEP = (int) TEST_FILE.getValue("/timeSleep");
     private static final int NUMBER_RE_SURVEYS = (int) TEST_FILE.getValue("/numberReSurveys");
     private int id = 0;
@@ -40,6 +40,7 @@ public class ScanShutterTest {
         createFolder(PATH_SCREEN.substring(0, PATH_SCREEN.lastIndexOf("\\")));
         createFolder(PATH_REPORT.substring(0, PATH_REPORT.lastIndexOf("\\")));
     }
+
 
     @Test(priority = 1, description = "Working with test data",
             dataProvider = "ScannedPageNumbers", dataProviderClass = DataProviderForTests.class)
@@ -79,17 +80,19 @@ public class ScanShutterTest {
     public void testGetTopImages() {
         Logger.getInstance().info("Report is being generated, please wait...");
         Path pathReport = Paths.get(String.format(PATH_REPORT, TYPE_SCAN));
-        try {
-            if (Files.exists(pathReport)) {
-                Files.delete(pathReport);
-            }
-            Files.createFile(pathReport);
-        } catch (IOException e) {
-            Logger.getInstance().error("Error IOException: " + e);
-        }
+        createNewFile(pathReport);
         List<ImageTable> images = getTopImages(getDateLastScanBase());
         Reports reports = new Reports();
         reports.writeTopImages(images, pathReport);
+    }
+
+    @Test(priority = 3, description = "Get report of last three scans")
+    public void testGetReportOfLastThreeScans() {
+        Logger.getInstance().info("Report is being generated, please wait...");
+        Path pathReport = Paths.get(String.format(LAST_THREE_SCANS_REPORT, TYPE_SCAN));
+        createNewFile(pathReport);
+        Reports reports = new Reports();
+        reports.writeReportOfLastThreeScans(pathReport);
     }
 
     @AfterClass
