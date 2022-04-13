@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 public class FileUtils {
     public static void createFolder(String nameFolder) {
@@ -14,7 +15,7 @@ public class FileUtils {
             try {
                 Files.createDirectories(path);
             } catch (IOException e) {
-                Logger.getInstance().error("Error creating directory " + e);
+                Logger.getInstance().error("Directory creation error: " + e);
             }
         }
     }
@@ -26,7 +27,15 @@ public class FileUtils {
             }
             Files.createFile(pathReport);
         } catch (IOException e) {
-            Logger.getInstance().error("Error IOException: " + e);
+            Logger.getInstance().error("File creation error: " + e);
+        }
+    }
+
+    public static void writeInFile(Path pathReport, String str) {
+        try {
+            Files.write(pathReport, str.getBytes(), StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            Logger.getInstance().error("Error writing to file: " + e);
         }
     }
 }

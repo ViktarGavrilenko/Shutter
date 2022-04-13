@@ -26,11 +26,15 @@ public class ScanShutterTest {
     private static final ISettingsFile CONFIG_FILE = new JsonSettingsFile("configData.json");
     private static final ISettingsFile TEST_FILE = new JsonSettingsFile("testData.json");
     private static final int MAX_COUNT_IMAGES = (int) TEST_FILE.getValue("/maxCountImages");
+    private static final int NUMBER_RECENT_SCAN = (int) TEST_FILE.getValue("/numberRecentScan");
+
+    private static final String MAX_COUNT_IMAGES_FOR_REPORTS = TEST_FILE.getValue("/maxCountImagesForReports").toString();
     private static final String TYPE_SCAN = TEST_FILE.getValue("/typeScan").toString();
     private static final String DEFAULT_URL = String.format(CONFIG_FILE.getValue("/mainPage").toString(), TYPE_SCAN);
     private static final String PATH_SCREEN = System.getProperty("user.dir") + TEST_FILE.getValue("/screen").toString();
     private static final String PATH_REPORT = System.getProperty("user.dir") + TEST_FILE.getValue("/report").toString();
-    private static final String LAST_THREE_SCANS_REPORT = System.getProperty("user.dir") + TEST_FILE.getValue("/lastThreeScans").toString();
+    private static final String LAST_THREE_SCANS_REPORT =
+            System.getProperty("user.dir") + TEST_FILE.getValue("/lastThreeScans").toString();
     private static final int TIME_SLEEP = (int) TEST_FILE.getValue("/timeSleep");
     private static final int NUMBER_RE_SURVEYS = (int) TEST_FILE.getValue("/numberReSurveys");
     private int id = 0;
@@ -40,7 +44,6 @@ public class ScanShutterTest {
         createFolder(PATH_SCREEN.substring(0, PATH_SCREEN.lastIndexOf("\\")));
         createFolder(PATH_REPORT.substring(0, PATH_REPORT.lastIndexOf("\\")));
     }
-
 
     @Test(priority = 1, description = "Working with test data",
             dataProvider = "ScannedPageNumbers", dataProviderClass = DataProviderForTests.class)
@@ -78,21 +81,21 @@ public class ScanShutterTest {
 
     @Test(priority = 2, description = "Get top images")
     public void testGetTopImages() {
-        Logger.getInstance().info("Report is being generated, please wait...");
+        Logger.getInstance().info("Report 'Top images' is being generated, please wait...");
         Path pathReport = Paths.get(String.format(PATH_REPORT, TYPE_SCAN));
         createNewFile(pathReport);
-        List<ImageTable> images = getTopImages(getDateLastScanBase());
+        List<ImageTable> images = getTopImages(getDateLastScanBase(), MAX_COUNT_IMAGES_FOR_REPORTS);
         Reports reports = new Reports();
         reports.writeTopImages(images, pathReport);
     }
 
     @Test(priority = 3, description = "Get report of last three scans")
     public void testGetReportOfLastThreeScans() {
-        Logger.getInstance().info("Report is being generated, please wait...");
+        Logger.getInstance().info("Report with last scans is being generated, please wait...");
         Path pathReport = Paths.get(String.format(LAST_THREE_SCANS_REPORT, TYPE_SCAN));
         createNewFile(pathReport);
         Reports reports = new Reports();
-        reports.writeReportOfLastThreeScans(pathReport);
+        reports.writeReportOfLastThreeScans(pathReport, NUMBER_RECENT_SCAN);
     }
 
     @AfterClass

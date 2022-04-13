@@ -16,11 +16,11 @@ import static utils.StringUtils.deleteStartNameOfLink;
 
 public class SearchPageQueries {
     private static final String INSERT_STR = "INSERT INTO %s (id_photo, num_top, link) VALUES (%s, %s,'%s')";
-    private static final String SELECT_DATE_WRITE_IN_BASE =
-            "SELECT datawriteinbase FROM %s GROUP BY DATE_FORMAT(datawriteinbase, '%%Y%%m%%d') ORDER BY datawriteinbase DESC";
+    private static final String SELECT_DATE_WRITE_IN_BASE = "SELECT datawriteinbase FROM %s " +
+            "GROUP BY DATE_FORMAT(datawriteinbase, '%%Y%%m%%d') ORDER BY datawriteinbase DESC";
     private static final String SELECT_TOP_IMAGES = "SELECT * FROM (SELECT * FROM %s where " +
             "DATE_FORMAT(datawriteinbase, '%%Y%%m%%d')=DATE_FORMAT( '%s', '%%Y%%m%%d') and num_top < 10000 " +
-            "ORDER BY id_photo DESC LIMIT 0, 200) as qwe order by num_top asc;";
+            "ORDER BY id_photo DESC LIMIT 0, %s) as qwe order by num_top asc;";
     private static final String SELECT_ALL_POSITIONS_OF_IMAGE =
             "SELECT num_top, DATE_FORMAT(datawriteinbase, '%%Y-%%m-%%d') as datawriteinbase FROM %s " +
                     "where id_photo = %s ORDER BY datawriteinbase DESC";
@@ -30,7 +30,6 @@ public class SearchPageQueries {
             "where DATE_FORMAT(datawriteinbase, '%%Y%%m%%d')=DATE_FORMAT('%s', '%%Y%%m%%d') ORDER BY id_photo DESC";
     private static final String SELECT_IMAGE_DATA_FOR_SPECIFIC_DATE = "SELECT * FROM %s where id_photo= %s and " +
             "DATE_FORMAT(datawriteinbase, '%%Y%%m%%d')=DATE_FORMAT('%s', '%%Y%%m%%d')";
-
 
     private static final ISettingsFile TEST_FILE = new JsonSettingsFile("testData.json");
     private static final String TYPE_SCAN = TEST_FILE.getValue("/typeScan").toString();
@@ -52,8 +51,8 @@ public class SearchPageQueries {
         }
     }
 
-    public static List<ImageTable> getTopImages(String lastDate) {
-        String query = String.format(SELECT_TOP_IMAGES, TYPE_SCAN, lastDate);
+    public static List<ImageTable> getTopImages(String lastDate, String numberOfImage) {
+        String query = String.format(SELECT_TOP_IMAGES, TYPE_SCAN, lastDate, numberOfImage);
         ResultSet resultSet = sendSelectQuery(query);
         ArrayList<ImageTable> listImages = new ArrayList<>();
         try {
