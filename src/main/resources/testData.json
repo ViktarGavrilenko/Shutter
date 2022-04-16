@@ -1,6 +1,6 @@
 {
   "startPage": 1,
-  "endPage": 2,
+  "endPage": 100,
   "maxCountImages": 10000,
   "maxCountImagesForReports": 200,
   "numberRecentScan": 3,
